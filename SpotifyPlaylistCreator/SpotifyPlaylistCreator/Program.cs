@@ -1,24 +1,29 @@
-﻿using SpotifyAPI.Web;
-using SpotifyAPI.Web.Models;
+﻿using SpotifyAPI.Web.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpotifyPlaylistCreator
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            var spotify = new SpotifyWebAPI()
-            {
-                UseAuth = false,
-            };
+            var spotify = SpotifyConnection.Get();
 
-            var fullTrack = spotify.GetTrack("3Hvu1pq89D4R0lyPBoujSv");
-            Console.Write(fullTrack.Name);
+            var searchItem = spotify.SearchItems("Asap+Rocky", SearchType.Artist);
+            var artistId = searchItem.Artists.Items.First().Id.ToString();
+            var albums = spotify.GetArtistsAlbums(artistId, AlbumType.Album);
+
+            foreach(var album in albums.Items)
+            {
+                Console.WriteLine(album.Name);
+                var tracks = spotify.GetAlbumTracks(album.Id);
+                tracks.Items.ForEach(i => Console.WriteLine(i.Name));
+                Console.WriteLine();
+            }
+
+            Console.ReadKey();
         }
     }
 }
