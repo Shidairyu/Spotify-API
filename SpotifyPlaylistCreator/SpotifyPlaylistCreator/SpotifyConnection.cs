@@ -11,8 +11,6 @@ namespace SpotifyPlaylistCreator
 {
     internal sealed class SpotifyConnection
     {
-        private SpotifyConnection() { }
-
         public static SpotifyWebAPI Get()
         {
             var webApiFactory = new WebAPIFactory(

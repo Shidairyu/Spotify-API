@@ -9,15 +9,18 @@ namespace SpotifyPlaylistCreator
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine("Which artist do you want to search?");
+            var searchInput = Console.ReadLine();
+
             var spotify = SpotifyConnection.Get();
 
-            var searchItem = spotify.SearchItems("Asap+Rocky", SearchType.Artist);
-            var artistId = searchItem.Artists.Items.First().Id.ToString();
+            var searchItem = spotify.SearchItems(searchInput, SearchType.Artist);
+            var artistId = searchItem.Artists.Items.First().Id;
             var albums = spotify.GetArtistsAlbums(artistId, AlbumType.Album);
 
             foreach(var album in albums.Items)
             {
-                Console.WriteLine(album.Name);
+                Console.WriteLine($"Album: {album.Name}");
                 var tracks = spotify.GetAlbumTracks(album.Id);
                 tracks.Items.ForEach(i => Console.WriteLine(i.Name));
                 Console.WriteLine();
